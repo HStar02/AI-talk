@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Talk - 角色语音对话</title>
+    <style>
+      :root {
+        --bg: #0b1020;
+        --panel: #10182a;
+        --panel-2: #0e1526;
+        --text: #e6ecff;
+        --muted: #94a3b8;
+        --brand: #6e8bff;
+        --brand-2: #8eecf5;
+        --card: #0f172a;
+        --border: #1e293b;
+        --user: #1f2d4a;
+        --bot: #141f35;
+      }
+      body[data-theme="light"] {
+        --bg: #f6f8ff;
+        --panel: #ffffff;
+        --panel-2: #f3f6ff;
+        --text: #0b1020;
+        --muted: #475569;
+        --brand: #4661ff;
+        --brand-2: #18b6cc;
+        --card: #ffffff;
+        --border: #d5dbeb;
+        --user: #e8eeff;
+        --bot: #f4f7ff;
+      }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+        color: var(--text);
+        background: radial-gradient(1200px 600px at 20% -10%, rgba(110,139,255,.25), transparent 50%),
+                    radial-gradient(900px 500px at 100% 0%, rgba(142,236,245,.18), transparent 50%),
+                    var(--bg);
+      }
+      body[data-theme="light"] {
+        background: radial-gradient(1200px 600px at 20% -10%, rgba(70,97,255,.10), transparent 50%),
+                    radial-gradient(900px 500px at 100% 0%, rgba(24,182,204,.10), transparent 50%),
+                    var(--bg);
+      }
+      .shell { max-width: 1120px; margin: 0 auto; padding: 24px; }
+      .nav { display: flex; align-items: center; justify-content: space-between; background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; backdrop-filter: blur(10px); box-shadow: 0 10px 25px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.06); }
+      .brand { display: flex; gap: 10px; align-items: center; font-weight: 700; letter-spacing: .2px; }
+      .logo { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, var(--brand), var(--brand-2)); box-shadow: 0 4px 16px rgba(110,139,255,.5); }
+      .actions { display: flex; gap: 10px; align-items: center; }
+      .btn { padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border); color: var(--text); background: var(--panel-2); cursor: pointer; transition: .2s ease; box-shadow: inset 0 1px 0 rgba(255,255,255,.05); }
+      .btn:hover { transform: translateY(-1px); border-color: #314159; }
+      .btn.primary { background: linear-gradient(135deg, var(--brand), #5e7dff); border-color: transparent; box-shadow: 0 8px 20px rgba(110,139,255,.35); }
+      .btn.ghost { background: transparent; }
+      .grid { margin-top: 16px; display: grid; grid-template-columns: 360px 1fr; gap: 16px; }
+      @media (max-width: 920px) { .grid { grid-template-columns: 1fr; } }
+      .panel { background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+      .search { display: flex; gap: 10px; }
+      .input { flex: 1; background: var(--panel-2); color: var(--text); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; outline: none; }
+      .roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 12px; }
+      .card { border: 1px solid var(--border); background: var(--card); border-radius: 12px; padding: 14px; box-shadow: 0 8px 20px rgba(0,0,0,.25); transition: transform .15s ease, box-shadow .15s ease; }
+      .card:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0,0,0,.35); }
+      .tagline { color: var(--muted); font-size: 12px; margin: 6px 0 10px; line-height: 1.4; }
+      .chat { height: 60vh; min-height: 360px; overflow: auto; border: 1px solid var(--border); border-radius: 14px; padding: 12px; background: var(--panel); box-shadow: inset 0 1px 0 rgba(255,255,255,.03); }
+      .bubble { max-width: 80%; padding: 10px 12px; border-radius: 14px; margin: 8px 0; line-height: 1.55; box-shadow: 0 6px 16px rgba(0,0,0,.25); }
+      .bubble.user { background: linear-gradient(180deg, rgba(110,139,255,.18), rgba(110,139,255,.08)); border: 1px solid #2b3b73; margin-left: auto; }
+      .bubble.bot { background: linear-gradient(180deg, rgba(20,31,53,.9), rgba(20,31,53,.75)); border: 1px solid #1b2744; }
+      .assist { color: var(--muted); font-size: 12px; margin-top: 6px; }
+      .composer { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; margin-top: 12px; }
+      textarea { width: 100%; height: 88px; resize: vertical; background: var(--panel); color: var(--text); border: 1px solid var(--border); border-radius: 12px; padding: 12px; outline: none; }
+      .status { color: var(--muted); font-size: 12px; margin-top: 8px; }
+      ::-webkit-scrollbar { width: 10px; height: 10px; }
+      ::-webkit-scrollbar-thumb { background: #273149; border-radius: 10px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="nav">
+        <div class="brand"><div class="logo"></div>AI Talk · 角色语音对话</div>
+        <div class="actions">
+          <button class="btn ghost" id="themeBtn">🌙 暗色</button>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="panel">
+          <div class="search">
+            <input id="search" class="input" placeholder="搜索角色，例如：哈利、苏格拉底" />
+            <button id="searchBtn" class="btn">搜索</button>
+            <button id="refreshBtn" class="btn ghost">全部</button>
+          </div>
+          <div id="roles" class="roles"></div>
+        </div>
+
+        <div class="panel">
+          <div class="assist">当前角色：<span id="currentRole">(未选择)</span></div>
+          <div class="chat" id="chat"></div>
+          <div class="composer">
+            <textarea id="text" placeholder="输入或用语音说话…"></textarea>
+            <button id="micBtn" class="btn">🎤 录音</button>
+            <button id="sendBtn" class="btn primary">发送</button>
+          </div>
+          <div class="status" id="status">准备就绪</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const api = (path, options={}) => fetch(path, options).then(r => r.json());
+      const chatDiv = document.getElementById('chat');
+      let roleId = null;
+      let messages = [];
+      let mediaStream = null; let mediaRecorder = null; let chunks = [];
+
+      function append(role, text) {
+        const div = document.createElement('div');
+        div.className = `bubble ${role === 'user' ? 'user' : 'bot'}`;
+        div.textContent = text;
+        chatDiv.appendChild(div);
+        chatDiv.scrollTop = chatDiv.scrollHeight;
+      }
+
+      async function loadRoles(q='') {
+        const list = await api(`/api/roles${q ? ('?q=' + encodeURIComponent(q)) : ''}`);
+        const box = document.getElementById('roles');
+        box.innerHTML = '';
+        list.forEach(r => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+              <div>
+                <div style=\"font-weight:700;\">${r.name}</div>
+                <div class=\"tagline\">${r.skills.join(' / ')}</div>
+              </div>
+              <button class=\"btn\" data-id=\"${r.id}\">选择</button>
+            </div>
+          `;
+          card.querySelector('button').onclick = () => { roleId = r.id; document.getElementById('currentRole').textContent = r.name; messages = []; chatDiv.innerHTML = ''; speak(''); };
+          box.appendChild(card);
+        });
+      }
+
+      async function sendText(text) {
+        if (!roleId) { alert('请先选择角色'); return; }
+        append('user', text);
+        messages.push({ role: 'user', content: text });
+        document.getElementById('status').textContent = '思考中…';
+        const resp = await api('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ roleId, messages }) });
+        const bot = resp.text || '(无回复)';
+        messages.push({ role: 'assistant', content: bot });
+        append('assistant', bot);
+        speak(bot);
+        document.getElementById('status').textContent = '完成';
+      }
+
+      // Web Speech API TTS（浏览器内置，作为演示；生产可替换云端TTS）
+      function speak(text) {
+        try {
+          const u = new SpeechSynthesisUtterance(text);
+          u.lang = 'zh-CN';
+          window.speechSynthesis.cancel();
+          window.speechSynthesis.speak(u);
+        } catch (e) {}
+      }
+
+      // 轻量ASR演示：使用浏览器SpeechRecognition（部分浏览器支持）
+      let rec = null; let recognizing = false;
+      function toggleMic() {
+        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SR) { alert('当前浏览器不支持语音识别，建议使用Chrome'); return; }
+        if (!rec) {
+          rec = new SR(); rec.lang = 'zh-CN'; rec.interimResults = false; rec.maxAlternatives = 1;
+          rec.onresult = e => { const t = e.results[0][0].transcript; document.getElementById('text').value = t; document.getElementById('status').textContent = '识别完成'; };
+          rec.onend = () => { recognizing = false; document.getElementById('micBtn').textContent = '🎤 开始录音'; };
+          rec.onerror = () => { recognizing = false; document.getElementById('status').textContent = '识别出错'; };
+        }
+        if (!recognizing) { rec.start(); recognizing = true; document.getElementById('micBtn').textContent = '■ 停止'; document.getElementById('status').textContent = '正在聆听…'; }
+        else { rec.stop(); }
+      }
+
+      document.getElementById('sendBtn').onclick = () => {
+        const t = document.getElementById('text').value.trim(); if (t) sendText(t);
+        document.getElementById('text').value = '';
+      };
+      document.getElementById('micBtn').onclick = toggleMic;
+      document.getElementById('searchBtn').onclick = () => loadRoles(document.getElementById('search').value);
+      document.getElementById('refreshBtn').onclick = () => loadRoles('');
+      document.getElementById('themeBtn').onclick = () => {
+        const body = document.body;
+        const btn = document.getElementById('themeBtn');
+        const next = body.dataset.theme === 'light' ? 'dark' : 'light';
+        body.dataset.theme = next;
+        btn.textContent = next === 'light' ? '☀️ 浅色' : '🌙 暗色';
+      };
+      // 默认进入浅色主题
+      (function initTheme(){
+        const body = document.body; const btn = document.getElementById('themeBtn');
+        if (!body.dataset.theme) { body.dataset.theme = 'light'; btn.textContent = '☀️ 浅色'; }
+      })();
+      loadRoles();
+    </script>
+  </body>
+</html>
+
+
