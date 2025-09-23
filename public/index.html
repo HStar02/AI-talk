@@ -32,6 +32,165 @@
         --bot: #fff8e1;
       }
       
+      /* 角色主题样式 - 暗色模式下所有角色保持一致 */
+      /* 浅色模式下保留角色特色样式 */
+      
+      /* 李白 - 黑白水墨风 */
+      body[data-theme="light"][data-role="li-bai"] {
+        --bg: #f9f9f9;
+        --panel: #ffffff;
+        --panel-2: #f5f5f5;
+        --text: #333333;
+        --muted: #777777;
+        --brand: #222222;
+        --brand-2: #888888;
+        --card: #ffffff;
+        --border: #dddddd;
+        --user: #f0f0f0;
+        --bot: #f5f5f5;
+        background: linear-gradient(1200px 600px at 20% -10%, rgba(0,0,0,.05), transparent 50%),
+                    radial-gradient(900px 500px at 100% 0%, rgba(255,255,255,.1), transparent 50%),
+                    var(--bg);
+      }
+      
+      body[data-theme="light"][data-role="li-bai"] .bubble.bot {
+        background: linear-gradient(180deg, #ffffff, #f5f5f5);
+        border: 1px solid #dddddd;
+      }
+      
+      body[data-theme="light"][data-role="li-bai"] .avatar.bot {
+        background: linear-gradient(135deg, #333333, #666666);
+        color: white;
+      }
+      
+      /* 派蒙 - 浅褐色和白色 */
+      body[data-theme="light"][data-role="paimon"] {
+        --bg: #fffef8;
+        --panel: #ffffff;
+        --panel-2: #fffdf0;
+        --text: #5e503f;
+        --muted: #8e7d6a;
+        --brand: #e9c46a;
+        --brand-2: #f4a261;
+        --card: #ffffff;
+        --border: #e76f51;
+        --user: #fff9e6;
+        --bot: #fff5e0;
+        background: radial-gradient(1200px 600px at 20% -10%, rgba(233,196,106,.15), transparent 50%),
+                    radial-gradient(900px 500px at 100% 0%, rgba(244,162,97,.10), transparent 50%),
+                    var(--bg);
+      }
+      
+      body[data-theme="light"][data-role="paimon"] .bubble.bot {
+        background: linear-gradient(180deg, #fff5e0, #fff9e6);
+        border: 1px solid #e9c46a;
+      }
+      
+      body[data-theme="light"][data-role="paimon"] .avatar.bot {
+        background: linear-gradient(135deg, #e9c46a, #f4a261);
+        color: #5e503f;
+      }
+      
+      /* 哈利·波特 - 魔法蓝 */
+      body[data-theme="light"][data-role="harry-potter"] {
+        --bg: #f1faee;
+        --panel: #ffffff;
+        --panel-2: #edf6f9;
+        --text: #1d3557;
+        --muted: #457b9d;
+        --brand: #1d3557;
+        --brand-2: #457b9d;
+        --card: #ffffff;
+        --border: #a8dadc;
+        --user: #e6f7ff;
+        --bot: #edf6f9;
+      }
+      
+      body[data-theme="light"][data-role="harry-potter"] .bubble.bot {
+        background: linear-gradient(180deg, #edf6f9, #e6f7ff);
+        border: 1px solid #a8dadc;
+      }
+      
+      body[data-theme="light"][data-role="harry-potter"] .avatar.bot {
+        background: linear-gradient(135deg, #1d3557, #457b9d);
+        color: white;
+      }
+      
+      /* 鲁迅 - 赤色革命风 */
+      body[data-theme="light"][data-role="lu-xun"] {
+        --bg: #f8f9fa;
+        --panel: #ffffff;
+        --panel-2: #f1faee;
+        --text: #1d3557;
+        --muted: #6c757d;
+        --brand: #e63946;
+        --brand-2: #a8dadc;
+        --card: #ffffff;
+        --border: #1d3557;
+        --user: #f8f9fa;
+        --bot: #f1faee;
+      }
+      
+      body[data-theme="light"][data-role="lu-xun"] .bubble.bot {
+        background: linear-gradient(180deg, #f1faee, #f8f9fa);
+        border: 1px solid #a8dadc;
+      }
+      
+      body[data-theme="light"][data-role="lu-xun"] .avatar.bot {
+        background: linear-gradient(135deg, #e63946, #a8dadc);
+        color: white;
+      }
+      
+      /* 丘吉尔 - 沉稳棕 */
+      body[data-theme="light"][data-role="churchill"] {
+        --bg: #f9f7f2;
+        --panel: #ffffff;
+        --panel-2: #f5f0e6;
+        --text: #5a4732;
+        --muted: #8d7c68;
+        --brand: #7a5c38;
+        --brand-2: #9b8468;
+        --card: #ffffff;
+        --border: #c7b8a6;
+        --user: #f5f0e6;
+        --bot: #f9f7f2;
+      }
+      
+      body[data-theme="light"][data-role="churchill"] .bubble.bot {
+        background: linear-gradient(180deg, #f9f7f2, #f5f0e6);
+        border: 1px solid #c7b8a6;
+      }
+      
+      body[data-theme="light"][data-role="churchill"] .avatar.bot {
+        background: linear-gradient(135deg, #7a5c38, #9b8468);
+        color: white;
+      }
+      
+      /* 苏格拉底 - 雅典蓝 */
+      body[data-theme="light"][data-role="socrates"] {
+        --bg: #f0f7ff;
+        --panel: #ffffff;
+        --panel-2: #e8f3ff;
+        --text: #1e293b;
+        --muted: #64748b;
+        --brand: #165dff;
+        --brand-2: #36cfc9;
+        --card: #ffffff;
+        --border: #b3c5e9;
+        --user: #e8f3ff;
+        --bot: #f0f7ff;
+      }
+      
+      body[data-theme="light"][data-role="socrates"] .bubble.bot {
+        background: linear-gradient(180deg, #f0f7ff, #e8f3ff);
+        border: 1px solid #b3c5e9;
+      }
+      
+      body[data-theme="light"][data-role="socrates"] .avatar.bot {
+        background: linear-gradient(135deg, #165dff, #36cfc9);
+        color: white;
+      }
+      
       /* 浅色主题下对方气泡样式优化 */
       body[data-theme="light"] .bubble.bot {
         background: linear-gradient(180deg, #fff8e1, #fff3e0);
@@ -228,7 +387,25 @@
               <button class="btn" data-id="${r.id}">选择</button>
             </div>
           `;
-          card.querySelector('button').onclick = () => { roleId = r.id; document.getElementById('currentRole').textContent = r.name; messages = []; chatDiv.innerHTML = ''; speak(''); };
+          card.querySelector('button').onclick = () => { 
+            roleId = r.id; 
+            document.getElementById('currentRole').textContent = r.name; 
+            // 设置角色主题
+            document.body.setAttribute('data-role', r.id);
+            messages = []; 
+            chatDiv.innerHTML = ''; 
+            speak(''); 
+            
+            // 显示角色开场白
+            if (r.sampleOpeners && r.sampleOpeners.length > 0) {
+              // 随机选择一个开场白
+              const opener = r.sampleOpeners[Math.floor(Math.random() * r.sampleOpeners.length)];
+              messages.push({ role: 'assistant', content: opener });
+              append('assistant', opener);
+              speak(opener);
+              document.getElementById('status').textContent = '角色已切换';
+            }
+          };
           box.appendChild(card);
         });
       }
