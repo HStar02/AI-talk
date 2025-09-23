@@ -371,6 +371,8 @@
         chatDiv.scrollTop = chatDiv.scrollHeight;
       }
 
+      let selectedRole = null; // 存储当前选中的完整角色对象
+      
       async function loadRoles(q='') {
         const list = await api(`/api/roles${q ? ('?q=' + encodeURIComponent(q)) : ''}`);
         const box = document.getElementById('roles');
@@ -389,6 +391,7 @@
           `;
           card.querySelector('button').onclick = () => { 
             roleId = r.id; 
+            selectedRole = r; // 保存完整的角色对象，包含语音配置
             document.getElementById('currentRole').textContent = r.name; 
             // 设置角色主题
             document.body.setAttribute('data-role', r.id);
@@ -428,6 +431,15 @@
         try {
           const u = new SpeechSynthesisUtterance(text);
           u.lang = 'zh-CN';
+          
+          // 获取当前选中角色的语音配置
+          if (selectedRole && selectedRole.voiceConfig) {
+            const { pitch, rate, volume } = selectedRole.voiceConfig;
+            if (pitch !== undefined) u.pitch = pitch;
+            if (rate !== undefined) u.rate = rate;
+            if (volume !== undefined) u.volume = volume;
+          }
+          
           window.speechSynthesis.cancel();
           window.speechSynthesis.speak(u);
         } catch (e) {}
